@@ -32,9 +32,11 @@ For the decode API, the output will be in this format:
 ![Image for input = a3b3c](https://dl.dropbox.com/s/kqcx11g3q7kt6iq/pic2.JPG?dl=0)
 
 The following test cases were considered: 
-* Input has all characters with each segment having freq > 2
+* Input has all characters with each segment having frequency > 2
+![Image for input = a3b3c4](https://dl.dropbox.com/s/854h0i8tinbuvzg/pic3.JPG?dl=0)
 
-* Input has atleast one character with segment having freq = 1
+* Input has atleast one character with segment having frequency = 1
+![Image for input = xyz](https://dl.dropbox.com/s/z1f4eucmtc5y10i/pic4.JPG?dl=0)
 
 
 
