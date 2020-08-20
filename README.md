@@ -26,6 +26,9 @@ Functions:
 * basex_to_base10 - to convert a string from any base(x) to decimal(base10) given the character set for that number system and x. 
 * base10_to_basex - to convert a string from base10 to basex given the character set for that number system and x.
 
+Limitation: 
+* Since it deals with big radix like 27 and 53. It will only work for considerably small strings (~length 11)
+
 For the encode API, the output will be in this format: 
 
 ![Image for input = helloworld](https://dl.dropbox.com/s/lztm47zrkpc28yb/pic8.JPG?dl=0)
