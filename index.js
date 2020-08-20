@@ -14,31 +14,53 @@ app.use((req, res, next) => {
 });
 
 
-function to_decimal(input) {
+// char to int
+let map27 = {};
+// int to char
+let array27 = new Array(27);
+
+
+map27['0'] = 0;
+array27[0] = '0';
+
+for (let i = 1; i <= 26; i++) {
+    map27[String.fromCharCode('a'.charCodeAt(0) + i - 1)] = i;
+    array27[i] = String.fromCharCode('a'.charCodeAt(0) + i - 1)
+}
+
+let map53 = {};
+let array53 = new Array(53);
+
+map53['0'] = 0;
+array53[0] = '0';
+
+for (let i = 1; i <= 52; i++) {
+    if (i <= 26) {
+        map53[String.fromCharCode('a'.charCodeAt(0) + i - 1)] = i;
+        array53[i] = String.fromCharCode('a'.charCodeAt(0) + i - 1)
+    }
+    else {
+        map53[String.fromCharCode('A'.charCodeAt(0) + i - 1 - 26)] = i;
+        array53[i] = String.fromCharCode('A'.charCodeAt(0) + i - 1 - 26)
+    }
+
+}
+
+function basex_to_base10(x, input, numberSet) {
     let ans = 0;
     let n = input.length;
     for (let i = 0; i < n; i++) {
-        ans += Math.pow(27, i) * ((input[n - i - 1].charCodeAt(0) - 'a'.charCodeAt(0)) + 1);
+        ans += Math.pow(x, i) * numberSet[input[n - i - 1]];
     }
     return ans;
 }
 
-
-function eq(c) {
-    if (c == 0) return '0';
-    if (c >= 1 && c <= 26)
-        return String.fromCharCode(c - 1 + 'a'.charCodeAt(0));
-    if (c >= 27 && c <= 52)
-        return String.fromCharCode(c - 26 - 1 + 'A'.charCodeAt(0));
-}
-
-
-function toBase53(decimal) {
+function base10_to_basex(x, decimal, numberSet) {
     let converted = "";
-    let base = 53;
+    let base = x;
 
     while (decimal > 0) {
-        let c = eq(decimal % base);
+        let c = numberSet[decimal % base];
         converted += c;
         decimal = Math.floor(decimal / base);
     }
@@ -46,57 +68,24 @@ function toBase53(decimal) {
     return converted;
 }
 
+
 app.get('/encode/', (req, res) => {
     var input = req.query.input;
     console.log("inpput is ", input)
-    let decimal = to_decimal(input)
+    let decimal = basex_to_base10(27, input, map27)
     console.log("decimal ", decimal)
-    let encoded = toBase53(decimal)
+    let encoded = base10_to_basex(53, decimal, array53)
     console.log(encoded)
-
     res.json({ "word": input, "encoded": encoded })
 })
 
-function val(c) {
-    if (c == '0') return 0;
-    else if (c >= 'a' && c <= 'z') return (c.charCodeAt(0) - 'a'.charCodeAt(0) + 1);
-    else return (c.charCodeAt(0) - 'A'.charCodeAt(0) + 26 + 1);
-}
 
-function base53_to_decimal(encoded) {
-    let ans = 0;
-    n = encoded.length;
-    for (let i = 0; i < n; i++) {
-        ans += Math.pow(53, i) * val(encoded[n - i - 1]);
-    }
-
-    return ans;
-}
-
-function eq_27(x) {
-    if (x == 0) return '0';
-    if (x >= 1 && x <= 26) return String.fromCharCode(x - 1 + 'a'.charCodeAt(0));
-}
-
-function get_decoded(decimal) {
-    let decoded = "";
-    let base = 27;
-
-    while (decimal > 0) {
-        let c = eq_27(decimal % base);
-        decoded += c;
-        decimal = Math.floor(decimal / base);
-    }
-
-    decoded = decoded.split('').reverse().join('')
-    return decoded;
-}
 app.get("/decode/", (req, res) => {
     let input = req.query.input;
     console.log(input)
-    let decimal = base53_to_decimal(input)
+    let decimal = basex_to_base10(53, input, map53)
     console.log(decimal)
-    let decoded = get_decoded(decimal)
+    let decoded = base10_to_basex(27, decimal, array27)
     console.log("decoded ", decoded)
     res.json({ "word": input, "decoded": decoded })
 })
